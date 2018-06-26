@@ -355,7 +355,11 @@ protected:
     template <typename ErrorCodeType>
     lib::error_code translate_ec(ErrorCodeType ec) {
         if (ec.category() == lib::asio::error::get_ssl_category()) {
+#if BOOST_VERSION >= 106200
+            if (ec.value() == boost::asio::ssl::error::stream_truncated) {
+#else
             if (ERR_GET_REASON(ec.value()) == SSL_R_SHORT_READ) {
+#endif
                 return make_error_code(transport::error::tls_short_read);
             } else {
                 // We know it is a TLS related error, but otherwise don't know
