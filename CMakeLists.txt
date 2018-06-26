@@ -16,7 +16,7 @@ find_package(Boost ${BOOST_VER} REQUIRED COMPONENTS system date_time random)
 
 aux_source_directory(${CMAKE_CURRENT_LIST_DIR}/src ALL_SRC)
 aux_source_directory(${CMAKE_CURRENT_LIST_DIR}/src/internal ALL_SRC)
-file(GLOB ALL_HEADERS ${CMAKE_CURRENT_LIST_DIR}/src/*.h )
+file(GLOB ALL_HEADERS ${CMAKE_CURRENT_LIST_DIR}/include/*.h )
 set(SIO_INCLUDEDIR ${CMAKE_CURRENT_LIST_DIR})
 
 # Fix MSVC build (https://github.com/Nelson-numerical-software/socket.io-client-cpp)
@@ -34,6 +34,9 @@ target_include_directories(sioclient PRIVATE ${Boost_INCLUDE_DIRS}
 set_property(TARGET sioclient PROPERTY CXX_STANDARD 11)
 set_property(TARGET sioclient PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(sioclient PRIVATE ${Boost_LIBRARIES})
+target_include_directories(sioclient PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
 if(BUILD_SHARED_LIBS)
 set_target_properties(sioclient
 	PROPERTIES
@@ -56,6 +59,9 @@ target_include_directories(sioclient_tls PRIVATE ${Boost_INCLUDE_DIRS}
 set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD 11)
 set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(sioclient_tls PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} )
+target_include_directories(sioclient_tls PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
 target_compile_definitions(sioclient_tls PRIVATE -DSIO_TLS)
 if(BUILD_SHARED_LIBS)
 set_target_properties(sioclient_tls
@@ -68,11 +74,19 @@ list(APPEND TARGET_LIBRARIES sioclient_tls)
 
 endif()
 
-install(FILES ${ALL_HEADERS} 
-    DESTINATION include
-)
-
-install(TARGETS ${TARGET_LIBRARIES}
-    DESTINATION lib
-)
+install(FILES ${ALL_HEADERS} DESTINATION include)
+install(TARGETS sioclient
+        EXPORT sioclient
+        ARCHIVE
+          DESTINATION lib
+        LIBRARY
+          DESTINATION lib)
+install(TARGETS sioclient_tls
+        EXPORT sioclient
+        ARCHIVE
+          DESTINATION lib
+        LIBRARY
+          DESTINATION lib)
+install(EXPORT sioclient
+    DESTINATION "lib/cmake")
 
