@@ -7,7 +7,7 @@
 #ifndef SIO_PACKET_H
 #define SIO_PACKET_H
 #include <sstream>
-#include "../sio_message.h"
+#include <sio_message.h>
 #include <functional>
 
 namespace sio
