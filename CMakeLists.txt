@@ -33,7 +33,7 @@ target_include_directories(sioclient PRIVATE ${Boost_INCLUDE_DIRS}
 
 set_property(TARGET sioclient PROPERTY CXX_STANDARD 11)
 set_property(TARGET sioclient PROPERTY CXX_STANDARD_REQUIRED ON)
-target_link_libraries(sioclient PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(sioclient PUBLIC ${Boost_LIBRARIES})
 target_include_directories(sioclient PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
@@ -55,7 +55,7 @@ target_include_directories(sioclient_tls PRIVATE ${Boost_INCLUDE_DIRS}
 
 set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD 11)
 set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD_REQUIRED ON)
-target_link_libraries(sioclient_tls PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} )
+target_link_libraries(sioclient_tls PUBLIC ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} )
 target_include_directories(sioclient_tls PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
