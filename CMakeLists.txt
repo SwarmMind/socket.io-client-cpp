@@ -3,6 +3,8 @@ PROJECT(sioclient
         VERSION 1.6.0
         LANGUAGES CXX)
 
+include(CMakePackageConfigHelpers)
+
 option(BUILD_SHARED_LIBS "Build the shared library" OFF)
 option(Boost_USE_STATIC_LIBS "Use Boost static version" ON)
 
@@ -35,14 +37,11 @@ target_link_libraries(sioclient PRIVATE ${Boost_LIBRARIES})
 target_include_directories(sioclient PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
-if(BUILD_SHARED_LIBS)
 set_target_properties(sioclient
 	PROPERTIES
 		SOVERSION ${PROJECT_VERSION_MAJOR}
 		VERSION ${PROJECT_VERSION}
 	)
-endif()
-list(APPEND TARGET_LIBRARIES sioclient)
 
 find_package(OpenSSL)
 if(OPENSSL_FOUND)
@@ -61,16 +60,15 @@ target_include_directories(sioclient_tls PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 target_compile_definitions(sioclient_tls PRIVATE -DSIO_TLS)
-if(BUILD_SHARED_LIBS)
 set_target_properties(sioclient_tls
 	PROPERTIES
 		SOVERSION ${PROJECT_VERSION_MAJOR}
 		VERSION ${PROJECT_VERSION}
 	)
 endif()
-list(APPEND TARGET_LIBRARIES sioclient_tls)
 
-endif()
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/sioclient-config-version.cmake
+                                 COMPATIBILITY AnyNewerVersion)
 
 install(FILES ${ALL_HEADERS} DESTINATION include)
 install(TARGETS sioclient
@@ -86,6 +84,8 @@ install(TARGETS sioclient_tls
         LIBRARY
           DESTINATION lib)
 install(EXPORT sioclient
-        DESTINATION "lib/cmake/sioclient"
+        DESTINATION lib/cmake/sioclient
         FILE sioclient-config.cmake)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/sioclient-config-version.cmake
+        DESTINATION lib/cmake/sioclient)
 
