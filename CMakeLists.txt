@@ -88,6 +88,6 @@ install(TARGETS sioclient_tls
         LIBRARY
           DESTINATION lib)
 install(EXPORT sioclient
-        DESTINATION "lib/cmake"
+        DESTINATION "lib/cmake/sioclient"
         FILE sioclient-config.cmake)
 
