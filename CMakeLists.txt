@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-PROJECT(sioclient)
+PROJECT(sioclient
+        VERSION 1.6.0
+        LANGUAGES CXX)
 
 option(BUILD_SHARED_LIBS "Build the shared library" OFF)
 option(Boost_USE_STATIC_LIBS "Use Boost static version" ON)
-
-set(MAJOR 1)
-set(MINOR 6)
-set(PATCH 0)
 
 set(BOOST_VER "1.55.0" CACHE STRING "boost version" )
 
@@ -40,8 +38,8 @@ target_include_directories(sioclient PUBLIC
 if(BUILD_SHARED_LIBS)
 set_target_properties(sioclient
 	PROPERTIES
-		SOVERSION ${MAJOR}
-		VERSION ${MAJOR}.${MINOR}.${PATCH}
+		SOVERSION ${PROJECT_VERSION_MAJOR}
+		VERSION ${PROJECT_VERSION}
 	)
 endif()
 list(APPEND TARGET_LIBRARIES sioclient)
@@ -66,8 +64,8 @@ target_compile_definitions(sioclient_tls PRIVATE -DSIO_TLS)
 if(BUILD_SHARED_LIBS)
 set_target_properties(sioclient_tls
 	PROPERTIES
-		SOVERSION ${MAJOR}
-		VERSION ${MAJOR}.${MINOR}.${PATCH}
+		SOVERSION ${PROJECT_VERSION_MAJOR}
+		VERSION ${PROJECT_VERSION}
 	)
 endif()
 list(APPEND TARGET_LIBRARIES sioclient_tls)
