@@ -5,6 +5,8 @@ PROJECT(sioclient
 
 include(CMakePackageConfigHelpers)
 
+set(CMAKE_DEBUG_POSTFIX d)
+
 option(BUILD_SHARED_LIBS "Build the shared library" OFF)
 option(Boost_USE_STATIC_LIBS "Use Boost static version" ON)
 
@@ -25,23 +27,23 @@ add_definitions(-D__STDC_LIMIT_MACROS -D_WEBSOCKETPP_NOEXCEPT_ -D_WEBSOCKETPP_CP
 endif()
 
 add_library(sioclient ${ALL_SRC})
-target_include_directories(sioclient PRIVATE ${Boost_INCLUDE_DIRS} 
-    ${CMAKE_CURRENT_LIST_DIR}/src 
-    ${CMAKE_CURRENT_LIST_DIR}/lib/websocketpp 
-    ${CMAKE_CURRENT_LIST_DIR}/lib/rapidjson/include
-)
-
 set_property(TARGET sioclient PROPERTY CXX_STANDARD 11)
 set_property(TARGET sioclient PROPERTY CXX_STANDARD_REQUIRED ON)
-target_link_libraries(sioclient PUBLIC ${Boost_LIBRARIES})
-target_include_directories(sioclient PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
 set_target_properties(sioclient
 	PROPERTIES
 		SOVERSION ${PROJECT_VERSION_MAJOR}
 		VERSION ${PROJECT_VERSION}
 	)
+
+target_include_directories(sioclient PRIVATE ${Boost_INCLUDE_DIRS} 
+    ${CMAKE_CURRENT_LIST_DIR}/src 
+    ${CMAKE_CURRENT_LIST_DIR}/lib/websocketpp 
+    ${CMAKE_CURRENT_LIST_DIR}/lib/rapidjson/include
+)
+target_link_libraries(sioclient PUBLIC ${Boost_LIBRARIES})
+target_include_directories(sioclient PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
 
 find_package(OpenSSL)
 if(OPENSSL_FOUND)
